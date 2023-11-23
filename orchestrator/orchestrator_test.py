@@ -89,12 +89,7 @@ class OrchestratorTest(absltest.TestCase):
         + (test_dummy_commands or [])
     )
     absl.logging.info(' '.join(args))
-    pass_fds = []
-    # Figure out the value of --binary_log_fd. It's either this or plumbing
-    # Popen **kwargs all the way to assertOrchestratorExitCode()
-    for f, fn in zip(args, args[1:]):
-      if f == '--binary_log_fd':
-        pass_fds.append(int(fn))
+    pass_fds = [int(fn) for f, fn in zip(args, args[1:]) if f == '--binary_log_fd']
     return dict(args=args, stderr=subprocess.PIPE, pass_fds=pass_fds)
 
   def _run(self, *args, **kwargs):
